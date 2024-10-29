@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diplomski Rad - Vremenski Izveštaj</title>
+    <link rel="icon" href="slike/title-icon.ico" type="image/ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <div class="card">
+        <div class="title">
+            <h1>Vremenski izveštaj</h1>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Ime mesta" spellcheck="false">
+            <button><img src="slike/search.png"></button>
+        </div>
+        <div class="error">
+            <p>Mesto nije pronađeno.</p>
+        </div>
+        <div class="empty-error">
+            <p>
+                <p>Unesite ime mesta.</p>
+            </p>
+        </div>
+        <div class="weather">
+            <img src="" class="weather-icon">
+            <h1 class="temp"></h1>
+            <h2 class="city"></h2>
+            <div class="details">
+                <div class="col">
+                    <img src="slike/humidity.png">
+                    <div>
+                        <p class="humidity"></p>
+                        <p>Vlažnost vazduha</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="slike/wind.png">
+                    <div>
+                        <p class="wind"></p>
+                        <p>Brzina vetra</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    const apiKey = "689657b5e95129bfa391bb2898b06b23";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+    const searchBox=document.querySelector(".search input");
+    const searchBtn=document.querySelector(".search button");
+    const weatherIcon=document.querySelector(".weather-icon");
+
+    async function checkWeather(city){
+        
+    
+
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+        if(response.status==404){
+            document.querySelector(".error").style.display="block";
+            document.querySelector(".weather").style.display="none";
+            document.body.style.backgroundImage = "url('slike/allweathers.png')";
+        }
+        else{
+            var data = await response.json();
+            console.log(data);
+            
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+        document.querySelector(".humidity").innerHTML = data.main.humidity +"%";
+        document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+        document.querySelector(".weather").style.display="block";
+        document.querySelector(".error").style.display="none";
+        //-------------------------------------------------------------------------------
+        if (data.weather[0].main == "Clouds") {
+            weatherIcon.src = "slike/clouds.png";
+            document.body.style.backgroundImage = "url('slike/cloudy-background.jpg')";
+        } else if (data.weather[0].main == "Clear") {
+            weatherIcon.src = "slike/clear.png";
+            document.body.style.backgroundImage = "url('slike/clear-background.jpg')";
+        } else if (data.weather[0].main == "Rain") {
+            weatherIcon.src = "slike/rain.png";
+            document.body.style.backgroundImage = "url('slike/rainy-background.jpg')";
+        } else if (data.weather[0].main == "Drizzle") {
+            weatherIcon.src = "slike/drizzle.png";
+            document.body.style.backgroundImage = "url('slike/drizzle-background.jpg')";
+        } else if (data.weather[0].main == "Mist") {
+            weatherIcon.src = "slike/mist.png";
+            document.body.style.backgroundImage = "url('slike/mist-background.jpg')";
+        } else if (data.weather[0].main == "Snow") {
+            weatherIcon.src = "slike/snow.png";
+            document.body.style.backgroundImage = "url('slike/snowy-background.jpg')";
+        }
+        
+    }
+
+    }
+    
+    function handleSearch() {
+        if (searchBox.value.trim() === "") {
+            document.querySelector(".empty-error").style.display = "block";
+            document.querySelector(".weather").style.display = "none";
+            document.querySelector(".error").style.display = "none";
+            document.body.style.backgroundImage = "url('slike/allweathers.png')";
+        } else {
+            document.querySelector(".empty-error").style.display = "none";
+            checkWeather(searchBox.value);
+        }
+    }
+
+    searchBtn.addEventListener("click", handleSearch);
+
+    searchBox.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        handleSearch();
+    }
+    });
+
+</script>
+</body>
+</html>
