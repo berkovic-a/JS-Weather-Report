@@ -48,10 +48,12 @@
         </div>
     </div>
 
-<script>
+<script type="module">
 
-    const apiKey = "689657b5e95129bfa391bb2898b06b23";
-    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    import config from './config.js';
+
+    const apiKey = config.apiKey;
+    const apiUrl = config.apiUrl;
 
     const searchBox=document.querySelector(".search input");
     const searchBtn=document.querySelector(".search button");
